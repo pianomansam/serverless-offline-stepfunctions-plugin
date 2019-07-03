@@ -1,0 +1,17 @@
+service: serverless-offline-stepfunctions-local-test
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+  example:
+    handler: src/example.get
+    events:
+      - http:
+          path: example
+          method: get
+
+plugins:
+  - serverless-offline-stepfunctions-local
+  - serverless-offline
