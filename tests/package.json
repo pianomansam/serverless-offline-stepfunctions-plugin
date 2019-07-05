@@ -6,6 +6,7 @@
   "dependencies": {
     "serverless": "^1.46.1",
     "serverless-offline": "^5.5.1",
-    "serverless-offline-stepfunctions-local": "file:../"
+    "serverless-offline-stepfunctions-local": "file:../",
+    "serverless-step-functions": "^1.25.0"
   }
 }

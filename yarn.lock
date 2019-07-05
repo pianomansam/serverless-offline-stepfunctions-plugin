@@ -558,6 +558,21 @@ aws-sdk@^2.382.0:
     uuid "3.3.2"
     xml2js "0.4.19"
 
+aws-sdk@^2.488.0:
+  version "2.488.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.488.0.tgz#1664e14743d93793d2ffc4b2e70b7ce19c008d84"
+  integrity sha512-9AP48tyF1E5+x1CKeiRlj0Sv1YF7KI0BdSW9JP8x3ClhPWNUHjDYNH2OwsALuG1BloeY2ZigYqfI2fB7g3rNHQ==
+  dependencies:
+    buffer "4.9.1"
+    events "1.1.1"
+    ieee754 "1.1.8"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.3.2"
+    xml2js "0.4.19"
+
 aws-sign2@~0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"
@@ -4087,10 +4102,9 @@ stealthy-require@^1.1.1:
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
 
-stepfunctions-local@^1.2.1:
+"stepfunctions-local@https://github.com/pianomansam/stepfunctions-local#serverless":
   version "1.2.1"
-  resolved "https://registry.yarnpkg.com/stepfunctions-local/-/stepfunctions-local-1.2.1.tgz#59d024412a8cafb571dd7dab32f78e35f91f146d"
-  integrity sha512-6ogI1TlcfPQYAcafUsIyZAVXCQhIdYzwxIZfJe8wuvnvGErCljvbB1Hg7D6iJA44oZH9hI40McJIBi4pjkughA==
+  resolved "https://github.com/pianomansam/stepfunctions-local#f2f19222ff41deadccb0f02d4955f4c14f7d2972"
   dependencies:
     asl-validator "^1.3.0"
     aws-sdk "^2.382.0"

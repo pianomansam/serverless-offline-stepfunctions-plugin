@@ -157,7 +157,7 @@
     "@hapi/cryptiles" "4.x.x"
     "@hapi/hoek" "6.x.x"
 
-"@hapi/joi@15.x.x":
+"@hapi/joi@15.x.x", "@hapi/joi@^15.0.2":
   version "15.1.0"
   resolved "https://registry.yarnpkg.com/@hapi/joi/-/joi-15.1.0.tgz#940cb749b5c55c26ab3b34ce362e82b6162c8e7a"
   integrity sha512-n6kaRQO8S+kepUTbXL9O/UOL788Odqs38/VOfoCrATDtTvyfiO3fgjlSRaNkHabpTLgM7qru9ifqXlXbXk8SeQ==
@@ -507,7 +507,7 @@ atob@^2.1.1:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-aws-sdk@^2.382.0, aws-sdk@^2.482.0:
+aws-sdk@^2.282.1, aws-sdk@^2.382.0, aws-sdk@^2.482.0, aws-sdk@^2.488.0:
   version "2.488.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.488.0.tgz#1664e14743d93793d2ffc4b2e70b7ce19c008d84"
   integrity sha512-9AP48tyF1E5+x1CKeiRlj0Sv1YF7KI0BdSW9JP8x3ClhPWNUHjDYNH2OwsALuG1BloeY2ZigYqfI2fB7g3rNHQ==
@@ -553,7 +553,7 @@ bl@^1.0.0:
     readable-stream "^2.3.5"
     safe-buffer "^5.1.1"
 
-bluebird@^3.5.5:
+bluebird@^3.4.0, bluebird@^3.5.5:
   version "3.5.5"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
   integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
@@ -690,7 +690,7 @@ caw@^2.0.0:
     tunnel-agent "^0.6.0"
     url-to-options "^1.0.1"
 
-chalk@^1.0.0:
+chalk@^1.0.0, chalk@^1.1.1:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-1.1.3.tgz#a8115c55e4a702fe4d150abd3872822a7e09fc98"
   integrity sha1-qBFcVeSnAv5NFQq9OHKCKn4J/Jg=
@@ -709,6 +709,11 @@ chalk@^2.0.1, chalk@^2.4.1, chalk@^2.4.2:
     ansi-styles "^3.2.1"
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
+
+chance@^1.0.18:
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/chance/-/chance-1.0.18.tgz#79788fe6fca4c338bf404321c347eecc80f969ee"
+  integrity sha512-g9YLQVHVZS/3F+zIicfB58vjcxopvYQRp7xHzvyDFDhXH1aRZI/JhwSAO0X5qYiQluoGnaNAU6wByD2KTxJN1A==
 
 ci-info@^1.5.0, ci-info@^1.6.0:
   version "1.6.0"
@@ -2155,7 +2160,7 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@^4.17.11, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.8.0:
+lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.8.0:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
@@ -2839,7 +2844,8 @@ serve-static@1.14.1:
 "serverless-offline-stepfunctions-local@file:..":
   version "0.0.1"
   dependencies:
-    stepfunctions-local "^1.2.1"
+    aws-sdk "^2.488.0"
+    stepfunctions-local "https://github.com/pianomansam/stepfunctions-local#serverless"
 
 serverless-offline@^5.5.1:
   version "5.5.1"
@@ -2857,7 +2863,20 @@ serverless-offline@^5.5.1:
     trim-newlines "^3.0.0"
     velocityjs "^1.1.3"
 
-serverless@^1.46.1:
+serverless-step-functions@^1.25.0:
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/serverless-step-functions/-/serverless-step-functions-1.25.0.tgz#fbafeaeeb7567b32f26c06adcef1a4cc8285ae70"
+  integrity sha512-YudGrlgRDwBh+wwJK+J8gTSAWCMcs++WQk/bL/cY/MWPgFmg+MNgnswUPCOHyYqhqCws3ZlBSP/idAQSt8xFMg==
+  dependencies:
+    "@hapi/joi" "^15.0.2"
+    aws-sdk "^2.282.1"
+    bluebird "^3.4.0"
+    chalk "^1.1.1"
+    chance "^1.0.18"
+    lodash "^4.17.10"
+    serverless "^1.29.2"
+
+serverless@^1.29.2, serverless@^1.46.1:
   version "1.46.1"
   resolved "https://registry.yarnpkg.com/serverless/-/serverless-1.46.1.tgz#fb7be9c8315fa5926285202e9345fa65103a2b1b"
   integrity sha512-f5Xy6Rg9Due7OR+8dnUNkNtrueXIGDHBV5tMr+OHx/LQ2zAy0oRWGPzYUPEvEZpTu7S6Ev81U42ghU3XBkfq0Q==
@@ -3048,10 +3067,9 @@ static-extend@^0.1.1:
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
   integrity sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
 
-stepfunctions-local@^1.2.1:
+"stepfunctions-local@https://github.com/pianomansam/stepfunctions-local#serverless":
   version "1.2.1"
-  resolved "https://registry.yarnpkg.com/stepfunctions-local/-/stepfunctions-local-1.2.1.tgz#59d024412a8cafb571dd7dab32f78e35f91f146d"
-  integrity sha512-6ogI1TlcfPQYAcafUsIyZAVXCQhIdYzwxIZfJe8wuvnvGErCljvbB1Hg7D6iJA44oZH9hI40McJIBi4pjkughA==
+  resolved "https://github.com/pianomansam/stepfunctions-local#f2f19222ff41deadccb0f02d4955f4c14f7d2972"
   dependencies:
     asl-validator "^1.3.0"
     aws-sdk "^2.382.0"

@@ -6,7 +6,8 @@
   "author": "Samuel Oltz <pianomansam@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "stepfunctions-local": "^1.2.1"
+    "aws-sdk": "^2.488.0",
+    "stepfunctions-local": "https://github.com/pianomansam/stepfunctions-local#serverless"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",
