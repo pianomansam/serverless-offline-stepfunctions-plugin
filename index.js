@@ -1,3 +1,4 @@
+const path = require('path');
 const AWS = require('aws-sdk');
 const stepFunctionsLocal = require('stepfunctions-local');
 
@@ -6,7 +7,9 @@ class ServerlessPlugin {
     this.serverless = serverless;
     this.options = options;
     this.service = this.serverless.service.service;
-    this.variables = this.serverless.service.custom.stepFunctionsLocal;
+    this.variables =
+      this.serverless.service.custom.stepFunctionsLocal ||
+      this.serverless.service.custom.stepFunctionsOffline;
     this.provider = this.serverless.getProvider('aws');
     this.region = this.provider.getRegion();
     this.stage = this.provider.getStage();
@@ -33,7 +36,8 @@ class ServerlessPlugin {
     // Test that stepfunctions-local is up and running.
     await this.waitforStepFunctionsLocalStart();
 
-    this.stateMachines = this.serverless.pluginManager.serverlessConfigFile.stepFunctions.stateMachines;
+    await this.yamlParse();
+    this.stateMachines = this.serverless.service.stepFunctions.stateMachines;
 
     // Create state machines for each one defined in serverless.yml.
     Promise.all(
@@ -87,7 +91,7 @@ class ServerlessPlugin {
     const params = {
       name: stateMachineName,
       definition: JSON.stringify(
-        this.buildStateMachine(this.stateMachines[stateMachineName]),
+        this.buildStateMachine(this.stateMachines[stateMachineName].definition),
       ),
       roleArn: `arn:aws:iam::${this.accountID}:role/service-role/MyRole`,
     };
@@ -112,9 +116,12 @@ class ServerlessPlugin {
         states[stateName] = this.buildStateArn(state, stateName);
       }
 
-      if (state.States) {
-        // eslint-disable-next-line no-param-reassign
-        states[stateName].States = this.buildStates(states[stateName].States);
+      if (state.Branches) {
+        state.Branches.map(branch => {
+          // eslint-disable-next-line no-param-reassign
+          branch.States = this.buildStates(branch.States);
+          return branch;
+        });
       }
     });
 
@@ -140,6 +147,55 @@ class ServerlessPlugin {
   endHandler() {
     this.serverlessLog('Stopping stepfunctions-local');
     this.stepFunctionsLocal.stop();
+  }
+
+  yamlParse() {
+    const { servicePath } = this.serverless.config;
+    if (!servicePath) {
+      return Promise.resolve();
+    }
+
+    const serverlessYmlPath = path.join(servicePath, 'serverless.yml');
+    return this.serverless.yamlParser
+      .parse(serverlessYmlPath)
+      .then(serverlessFileParam =>
+        this.serverless.variables
+          .populateObject(serverlessFileParam)
+          .then(parsedObject => {
+            this.serverless.service.stepFunctions = {};
+            this.serverless.service.stepFunctions.stateMachines =
+              parsedObject.stepFunctions &&
+              parsedObject.stepFunctions.stateMachines
+                ? parsedObject.stepFunctions.stateMachines
+                : {};
+            this.serverless.service.stepFunctions.activities =
+              parsedObject.stepFunctions &&
+              parsedObject.stepFunctions.activities
+                ? parsedObject.stepFunctions.activities
+                : [];
+
+            if (!this.serverless.pluginManager.cliOptions.stage) {
+              this.serverless.pluginManager.cliOptions.stage =
+                this.options.stage ||
+                (this.serverless.service.provider &&
+                  this.serverless.service.provider.stage) ||
+                'dev';
+            }
+
+            if (!this.serverless.pluginManager.cliOptions.region) {
+              this.serverless.pluginManager.cliOptions.region =
+                this.options.region ||
+                (this.serverless.service.provider &&
+                  this.serverless.service.provider.region) ||
+                'us-east-1';
+            }
+
+            this.serverless.variables.populateService(
+              this.serverless.pluginManager.cliOptions,
+            );
+            return Promise.resolve();
+          }),
+      );
   }
 }
 
