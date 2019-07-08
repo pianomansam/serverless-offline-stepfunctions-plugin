@@ -63,8 +63,8 @@ custom:
   offlineStepFunctions:
     host: localhost
     port: 4584
-  	functions:
-	    HelloWorld: hello
+    functions: 
+	HelloWorld: hello
 ```
 
 ### Execute via AWS CLI
@@ -106,3 +106,6 @@ Like the plugin above it (serverless-step-functions-offline), this plugin intern
 This plugin downloads and wraps AWS's [Step Functions Local](https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html) and creates state machines for each stepFunctions entry. It's the closest to this plugin in terms of functionality. But the one main distinction is that it manages your Step Functions emulator for you, which also means you have to use its emulator. On the contrary, serverless-offline-stepfunctions defers that decision and control, so you are free to use whatever emulator you wish.
 
 	
+## Roadmap
+- [ ] Integrate with [Step Functions Local](https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html)
+- [ ] Integration with Localstack
