@@ -1,41 +1,32 @@
 const path = require('path');
 const AWS = require('aws-sdk');
-const stepFunctionsLocal = require('stepfunctions-local');
 
 class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless;
     this.options = options;
     this.service = this.serverless.service.service;
-    this.variables =
-      this.serverless.service.custom.stepFunctionsLocal ||
-      this.serverless.service.custom.stepFunctionsOffline;
+    this.config = this.serverless.service.custom.offlineStepFunctions;
     this.provider = this.serverless.getProvider('aws');
     this.region = this.provider.getRegion();
     this.stage = this.provider.getStage();
-    this.accountID = '0123456789';
-    this.serverlessHost = this.options.host || 'localhost';
-    this.serverlessPort = this.options.port || 3000;
+    this.accountID = '000000000000';
+    this.stepFunctionHost = this.config.host || 'localhost';
+    this.stepFunctionPort = this.config.port || 4584;
     this.serverlessLog = serverless.cli.log.bind(serverless.cli);
-    this.stepFunctionsLocal = stepFunctionsLocal;
 
     this.stepFunctionsApi = new AWS.StepFunctions({
-      endpoint: `http://${this.serverlessHost}:4584`,
+      endpoint: `http://${this.stepFunctionHost}:${this.stepFunctionPort}`,
       region: this.region,
     });
 
     this.hooks = {
+      'offline:start': this.startHandler.bind(this),
       'offline:start:init': this.startHandler.bind(this),
-      'before:offline:start:end': this.endHandler.bind(this),
     };
   }
 
   async startHandler() {
-    this.startStepFunctionsLocal();
-
-    // Test that stepfunctions-local is up and running.
-    await this.waitforStepFunctionsLocalStart();
-
     await this.yamlParse();
     this.stateMachines = this.serverless.service.stepFunctions.stateMachines;
 
@@ -45,44 +36,6 @@ class ServerlessPlugin {
         this.createStateMachine(stateMachineName),
       ),
     );
-  }
-
-  startStepFunctionsLocal() {
-    this.serverlessLog('Starting stepfunctions-local');
-
-    // eslint-disable-next-line prettier/prettier
-    const lambdaEndpoint = `http://${this.serverlessHost}:${this.serverlessPort}`;
-    this.stepFunctionsLocal.start({
-      lambdaEndpoint,
-      lambdaRegion: this.region,
-      ecsRegion: this.region,
-      region: this.region,
-      stripLambdaArn: true,
-    });
-  }
-
-  async waitforStepFunctionsLocalStart() {
-    let result;
-    let retries = 0;
-
-    this.serverlessLog('Waiting for stepfunctions-local to be up...');
-
-    do {
-      try {
-        result = await this.stepFunctionsApi.listStateMachines().promise();
-      } catch (e) {
-        retries += 1;
-        if (retries <= 5) {
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        } else {
-          throw e;
-        }
-      }
-    } while (!result);
-
-    this.serverlessLog('Stepfunctions-local is up');
-
-    return result;
   }
 
   createStateMachine(stateMachineName) {
@@ -134,7 +87,7 @@ class ServerlessPlugin {
         // eslint-disable-next-line no-param-reassign
         state.Resource =
           // eslint-disable-next-line prettier/prettier
-          `arn:aws:lambda:${this.region}:${this.accountID}:function:${this.service}-${this.stage}-${this.variables[stateName]}`;
+          `arn:aws:lambda:${this.region}:${this.accountID}:function:${this.service}-${this.stage}-${this.config.functions[stateName]}`;
         break;
 
       default:
@@ -142,11 +95,6 @@ class ServerlessPlugin {
     }
 
     return state;
-  }
-
-  endHandler() {
-    this.serverlessLog('Stopping stepfunctions-local');
-    this.stepFunctionsLocal.stop();
   }
 
   yamlParse() {

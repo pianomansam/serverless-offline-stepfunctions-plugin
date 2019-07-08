@@ -1,4 +1,4 @@
-service: serverless-offline-stepfunctions-local-test
+service: serverless-offline-stepfunctions-test
 
 provider:
   name: aws
@@ -14,23 +14,48 @@ functions:
 
 stepFunctions:
   stateMachines:
-    Test:
+    # Test:
+    #   definition:
+    #     Comment: Test Step Function
+    #     StartAt: HelloWorld
+    #     States:
+    #       HelloWorld:
+    #         Type: Task
+    #         Resource:
+    #           Fn::GetAtt: [ExampleLambdaFunction, Arn]
+    #         End: true
+    TestString:
       definition:
         Comment: Test Step Function
-        StartAt: HelloWorld
+        StartAt: Parallel
         States:
-          HelloWorld:
-            Type: Task
-            InputPath: ${self:custom.stepFunctionsLocal.HelloWorld}
-            Resource:
-              Fn::GetAtt: [ExampleLambdaFunction, Arn]
+          Parallel:
+            Type: Parallel
+            ResultPath: "$.result"
             End: true
+            Branches:
+            - StartAt: First
+              States:
+                First:
+                  Type: Pass
+                  InputPath: "$.first"
+                  End: true
+            - StartAt: Second
+              States:
+                Second:
+                  Type: Pass
+                  InputPath: "$.second"
+                  End: true
 
 custom:
-  stepFunctionsLocal:
-    HelloWorld: example
+  offlineStepFunctions:
+    port: 4584
+    host: localhost
+    functions:
+      HelloWorld: example
 
 plugins:
   - serverless-step-functions
-  - serverless-offline-stepfunctions-local
+  # - serverless-offline-stepfunctions-local
+  - serverless-offline-stepfunctions
   - serverless-offline

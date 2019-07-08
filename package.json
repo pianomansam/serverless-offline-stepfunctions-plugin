@@ -1,13 +1,16 @@
 {
-  "name": "serverless-offline-stepfunctions-local",
+  "name": "serverless-offline-stepfunctions",
   "version": "0.0.1",
   "main": "index.js",
-  "repository": "git@github.com:pianomansam/serverless-offline-stepfunctions-local.git",
+  "repository": "git@github.com:pianomansam/serverless-offline-stepfunctions.git",
   "author": "Samuel Oltz <***REMOVED***>",
   "license": "MIT",
+  "scripts": {
+    "lint": "yarn eslint ."
+  },
   "dependencies": {
     "aws-sdk": "^2.488.0",
-    "stepfunctions-local": "https://github.com/pianomansam/stepfunctions-local#serverless"
+    "stepfunctions-local": "https://github.com/pianomansam/stepfunctions-local#strip-lambda-arn"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",
@@ -16,6 +19,7 @@
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-prettier": "^3.1.0",
-    "jest": "^24.8.0"
+    "jest": "^24.8.0",
+    "prettier": "^1.18.2"
   }
 }
