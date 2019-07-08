@@ -6,7 +6,7 @@
 
 This [Serverless Offline](https://www.npmjs.com/package/serverless-offline) plugin provides local support for [Serverless Step Functions](https://www.npmjs.com/package/serverless-step-functions). It creates state machines for every stepFunctions entry on a local step function emulator.
 
-This plugin doesn't manage local step function emulator. You need to install and start the emulator before using this plugin.
+This plugin doesn't manage the local step function emulator. You need to install and start the emulator before using this plugin.
 
 Tested emulators:
 - [stepfunctions-local standalone](https://www.npmjs.com/package/stepfunctions-local)
