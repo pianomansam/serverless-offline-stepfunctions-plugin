@@ -6,11 +6,14 @@ class ServerlessPlugin {
     this.serverless = serverless;
     this.options = options;
     this.service = this.serverless.service.service;
-    this.config = this.serverless.service.custom.offlineStepFunctions;
+    this.config =
+      (this.serverless.service.custom &&
+        this.serverless.service.custom.offlineStepFunctions) ||
+      {};
     this.provider = this.serverless.getProvider('aws');
     this.region = this.provider.getRegion();
     this.stage = this.provider.getStage();
-    this.accountID = '000000000000';
+    this.accountId = this.config.accountId || '0123456789';
     this.stepFunctionHost = this.config.host || 'localhost';
     this.stepFunctionPort = this.config.port || 4584;
     this.serverlessLog = serverless.cli.log.bind(serverless.cli);
@@ -30,12 +33,24 @@ class ServerlessPlugin {
     await this.yamlParse();
     this.stateMachines = this.serverless.service.stepFunctions.stateMachines;
 
+    if (!this.stateMachines) {
+      this.serverlessLog('No state machines found, skipping creation.');
+      return;
+    }
+
     // Create state machines for each one defined in serverless.yml.
-    Promise.all(
+    const endpoints = await Promise.all(
       Object.keys(this.stateMachines).map(stateMachineName =>
         this.createStateMachine(stateMachineName),
       ),
     );
+
+    // Set environment variables with references to ARNs.
+    endpoints.forEach(endpoint => {
+      process.env[
+        `OFFLINE_STEP_FUNCTIONS_ARN_${endpoint.stateMachineArn.split(':')[6]}`
+      ] = endpoint.stateMachineArn;
+    });
   }
 
   createStateMachine(stateMachineName) {
@@ -46,7 +61,7 @@ class ServerlessPlugin {
       definition: JSON.stringify(
         this.buildStateMachine(this.stateMachines[stateMachineName].definition),
       ),
-      roleArn: `arn:aws:iam::${this.accountID}:role/service-role/MyRole`,
+      roleArn: `arn:aws:iam::${this.accountId}:role/service-role/MyRole`,
     };
     return this.stepFunctionsApi.createStateMachine(params).promise();
   }
@@ -87,7 +102,7 @@ class ServerlessPlugin {
         // eslint-disable-next-line no-param-reassign
         state.Resource =
           // eslint-disable-next-line prettier/prettier
-          `arn:aws:lambda:${this.region}:${this.accountID}:function:${this.service}-${this.stage}-${this.config.functions[stateName]}`;
+          `arn:aws:lambda:${this.region}:${this.accountId}:function:${this.service}-${this.stage}-${this.config.functions[stateName]}`;
         break;
 
       default:
