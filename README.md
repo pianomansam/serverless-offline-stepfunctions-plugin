@@ -6,7 +6,7 @@
 
 This [Serverless Offline](https://www.npmjs.com/package/serverless-offline) plugin provides local support for [Serverless Step Functions](https://www.npmjs.com/package/serverless-step-functions). It creates state machines for every stepFunctions entry on a local step function emulator.
 
-This plugin doesn't manage local step function emulator. You need to install and start the emulator before using this plugin.
+This plugin doesn't manage the local step function emulator. You need to install and start the emulator before using this plugin.
 
 Tested emulators:
 - [stepfunctions-local standalone](https://www.npmjs.com/package/stepfunctions-local)
@@ -63,8 +63,8 @@ custom:
   offlineStepFunctions:
     host: localhost
     port: 4584
-  	functions:
-	    HelloWorld: hello
+    functions: 
+	HelloWorld: hello
 ```
 
 ### Execute via AWS CLI
@@ -103,6 +103,9 @@ Like the plugin above it (serverless-step-functions-offline), this plugin intern
 
 
 ### [serverless-step-functions-local](https://github.com/codetheweb/serverless-step-functions-local#readme)
-This plugin downloads and wraps AWS's [Step Functions Local](https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html) and creates state machines for each stepFunctions entry. It's the closest to this plugin in terms of functionality. But the one main distinction is that is manages your Step Functions emulator for you, which also means you have to use its emulator. 
+This plugin downloads and wraps AWS's [Step Functions Local](https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html) and creates state machines for each stepFunctions entry. It's the closest to this plugin in terms of functionality. But the one main distinction is that it manages your Step Functions emulator for you, which also means you have to use its emulator. On the contrary, serverless-offline-stepfunctions defers that decision and control, so you are free to use whatever emulator you wish.
 
-This plugin defers that decision and control, so you are free to use whatever emulator you wish.
+	
+## Roadmap
+- [ ] Integrate with [Step Functions Local](https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html)
+- [ ] Integration with Localstack
