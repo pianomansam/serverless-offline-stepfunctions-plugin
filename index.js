@@ -21,6 +21,8 @@ class ServerlessPlugin {
     this.stepFunctionsApi = new AWS.StepFunctions({
       endpoint: `http://${this.stepFunctionHost}:${this.stepFunctionPort}`,
       region: this.region,
+      accessKeyId: 'fake',
+      secretAccessKey: 'fake',
     });
 
     this.hooks = {
@@ -39,31 +41,45 @@ class ServerlessPlugin {
     }
 
     // Create state machines for each one defined in serverless.yml.
-    const endpoints = await Promise.all(
+    await Promise.all(
       Object.keys(this.stateMachines).map(stateMachineName =>
         this.createStateMachine(stateMachineName),
       ),
     );
-
-    // Set environment variables with references to ARNs.
-    endpoints.forEach(endpoint => {
-      process.env[
-        `OFFLINE_STEP_FUNCTIONS_ARN_${endpoint.stateMachineArn.split(':')[6]}`
-      ] = endpoint.stateMachineArn;
-    });
   }
 
-  createStateMachine(stateMachineName) {
-    this.serverlessLog(`Creating state machine ${stateMachineName}`);
+  async createStateMachine(stateMachineName) {
+    let response;
 
-    const params = {
-      name: stateMachineName,
-      definition: JSON.stringify(
-        this.buildStateMachine(this.stateMachines[stateMachineName].definition),
-      ),
-      roleArn: `arn:aws:iam::${this.accountId}:role/service-role/MyRole`,
-    };
-    return this.stepFunctionsApi.createStateMachine(params).promise();
+    try {
+      this.serverlessLog(`Creating state machine ${stateMachineName}`);
+
+      const params = {
+        name: stateMachineName,
+        definition: JSON.stringify(
+          this.buildStateMachine(
+            this.stateMachines[stateMachineName].definition,
+          ),
+        ),
+        roleArn: `arn:aws:iam::${this.accountId}:role/service-role/MyRole`,
+      };
+      response = await this.stepFunctionsApi
+        .createStateMachine(params)
+        .promise();
+
+      this.serverlessLog(`Successfully created ${response.stateMachineArn}`);
+
+      this.serverlessLog(
+        `ARN available at OFFLINE_STEP_FUNCTIONS_ARN_${stateMachineName}`,
+      );
+
+      process.env[`OFFLINE_STEP_FUNCTIONS_ARN_${stateMachineName}`] =
+        response.stateMachineArn;
+    } catch (error) {
+      console.error(error);
+    }
+
+    return response;
   }
 
   buildStateMachine(stateMachine) {
