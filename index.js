@@ -15,6 +15,7 @@ class ServerlessPlugin {
 
   async startHandler() {
     await this.yamlParse();
+
     this.service = this.serverless.service.service;
     this.config =
       (this.serverless.service.custom &&
@@ -28,9 +29,15 @@ class ServerlessPlugin {
     this.stepFunctionPort = this.config.port || 4584;
     this.stepFunctionsApi = new AWS.StepFunctions({
       endpoint: `http://${this.stepFunctionHost}:${this.stepFunctionPort}`,
-      region: AWS.config.credentials.region || this.region,
-      accessKeyId: AWS.config.credentials.accessKeyId || 'fake',
-      secretAccessKey: AWS.config.credentials.secretAccessKey || 'fake',
+      region:
+        (AWS.config.credentials && AWS.config.credentials.region) ||
+        this.region,
+      accessKeyId:
+        (AWS.config.credentials && AWS.config.credentials.accessKeyId) ||
+        'fake',
+      secretAccessKey:
+        (AWS.config.credentials && AWS.config.credentials.secretAccessKey) ||
+        'fake',
     });
 
     this.stateMachines = this.serverless.service.stepFunctions.stateMachines;
