@@ -3,6 +3,7 @@ service: serverless-offline-stepfunctions-test
 provider:
   name: aws
   runtime: nodejs8.10
+  stage: ${opt:stage, 'local'}
 
 functions:
   example:
@@ -56,6 +57,6 @@ custom:
 
 plugins:
   - serverless-step-functions
-  # - serverless-offline-stepfunctions-local
+  - serverless-offline-stepfunctions-local
   - serverless-offline-stepfunctions
   - serverless-offline

@@ -5,6 +5,16 @@ class ServerlessPlugin {
   constructor(serverless, options) {
     this.serverless = serverless;
     this.options = options;
+    this.serverlessLog = this.serverless.cli.log.bind(this.serverless.cli);
+
+    this.hooks = {
+      'offline:start': this.startHandler.bind(this),
+      'offline:start:init': this.startHandler.bind(this),
+    };
+  }
+
+  async startHandler() {
+    await this.yamlParse();
     this.service = this.serverless.service.service;
     this.config =
       (this.serverless.service.custom &&
@@ -16,23 +26,13 @@ class ServerlessPlugin {
     this.accountId = this.config.accountId || '0123456789';
     this.stepFunctionHost = this.config.host || 'localhost';
     this.stepFunctionPort = this.config.port || 4584;
-    this.serverlessLog = serverless.cli.log.bind(serverless.cli);
-
     this.stepFunctionsApi = new AWS.StepFunctions({
       endpoint: `http://${this.stepFunctionHost}:${this.stepFunctionPort}`,
-      region: this.region,
-      accessKeyId: 'fake',
-      secretAccessKey: 'fake',
+      region: AWS.config.credentials.region || this.region,
+      accessKeyId: AWS.config.credentials.accessKeyId || 'fake',
+      secretAccessKey: AWS.config.credentials.secretAccessKey || 'fake',
     });
 
-    this.hooks = {
-      'offline:start': this.startHandler.bind(this),
-      'offline:start:init': this.startHandler.bind(this),
-    };
-  }
-
-  async startHandler() {
-    await this.yamlParse();
     this.stateMachines = this.serverless.service.stepFunctions.stateMachines;
 
     if (!this.stateMachines) {
@@ -76,6 +76,7 @@ class ServerlessPlugin {
       process.env[`OFFLINE_STEP_FUNCTIONS_ARN_${stateMachineName}`] =
         response.stateMachineArn;
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error);
     }
 
