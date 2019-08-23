@@ -1,9 +1,9 @@
 {
-  "name": "serverless-offline-stepfunctions",
+  "name": "serverless-offline-stepfunctions-plugin",
   "description" : "This Serverless Offline plugin provides local support for Serverless Step Functions",
   "version": "0.0.1",
   "main": "index.js",
-  "repository": "git@github.com:pianomansam/serverless-offline-stepfunctions.git",
+  "repository": "git@github.com:pianomansam/serverless-offline-stepfunctions-plugin.git",
   "author": "Samuel Oltz <***REMOVED***>",
   "license": "MIT",
   "scripts": {

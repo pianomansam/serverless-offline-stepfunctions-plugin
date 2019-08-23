@@ -1,4 +1,4 @@
-# serverless-offline-stepfunctions
+# serverless-offline-stepfunctions-plugin
 
 
 ## Overview
@@ -15,16 +15,16 @@ Tested emulators:
 
 ## Installation
 ```
-npm install serverless-offline-stepfunctions
+npm install serverless-offline-stepfunctions-plugin
 ```
 OR
 ```
-yarn add serverless-offline-stepfunctions
+yarn add serverless-offline-stepfunctions-plugin
 ```
 
 ## Usage
 
-1. Enable this plugin by editing your `serverless.yml` file and placing an `serverless-offline-stepfunctions` entry in the plugins section, **placed above the `serverless-offline` plugin**
+1. Enable this plugin by editing your `serverless.yml` file and placing an `serverless-offline-stepfunctions-plugin` entry in the plugins section, **placed above the `serverless-offline` plugin**
 2. Create a `offlineStepFunctions` entry in the `custom` section.
 3. For each lambda task, add a task name -> lambda name pair. See `serverless.yml` example below.
 4. (Optional) Add a `host` and `port` property defining the emulator host and port. Default host is `localhost` and default port is `4584`.
@@ -38,7 +38,7 @@ serverless.yml:
 plugins:
   # Note how this comes before serverless-offline
   - serverless-step-functions
-  - serverless-offline-stepfunctions
+  - serverless-offline-stepfunctions-plugin
   - serverless-offline
 
 functions:
@@ -104,7 +104,7 @@ Like the plugin above it (serverless-step-functions-offline), this plugin intern
 
 
 ### [serverless-step-functions-local](https://github.com/codetheweb/serverless-step-functions-local#readme)
-This plugin downloads and wraps AWS's [Step Functions Local](https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html) and creates state machines for each stepFunctions entry. It's the closest to this plugin in terms of functionality. But the one main distinction is that it manages your Step Functions emulator for you, which also means you have to use its emulator. Which means you need Java to download and run Step Functions Local. On the contrary, `serverless-offline-stepfunctions` defers that decision and control, so you are free to use whatever emulator you wish.
+This plugin downloads and wraps AWS's [Step Functions Local](https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html) and creates state machines for each stepFunctions entry. It's the closest to this plugin in terms of functionality. But the one main distinction is that it manages your Step Functions emulator for you, which also means you have to use its emulator. Which means you need Java to download and run Step Functions Local. On the contrary, `serverless-offline-stepfunctions-plugin` defers that decision and control, so you are free to use whatever emulator you wish.
 
 	
 ## Roadmap
