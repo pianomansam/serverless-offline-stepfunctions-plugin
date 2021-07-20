@@ -10,6 +10,6 @@
   "devDependencies": {
     "serverless-offline": "^5.5.1",
     "serverless-offline-stepfunctions-plugin": "file:../",
-    "serverless-offline-stepfunctions-local": "^0.0.1"
+    "serverless-offline-stepfunctions-local": "^0.0.2"
   }
 }
